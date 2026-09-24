@@ -1,5 +1,0 @@
-storage:
-  ivy-tendril:
-    provider: azure
-    account_name: stivytelemetry
-    container_name: ivy-tendril

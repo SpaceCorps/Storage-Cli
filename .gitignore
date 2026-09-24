@@ -4,7 +4,10 @@ obj/
 *.suo
 .vs/
 nupkgs/
-
-# Configuration files with secrets
+nupkg/
+target/
 config.yaml
-src/config.yaml
+secrets.json
+secrets.dpapi
+.lock
+*.tmp
