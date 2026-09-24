@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "storage-cli",
+      "description": "Upload files and directories to Azure Blob Storage with automated zip packaging and time-limited read-only SAS URLs.",
+      "type": "skill-md",
+      "url": "https://spacecorps.github.io/Storage-Cli/llms.txt"
+    }
+  ]
+}

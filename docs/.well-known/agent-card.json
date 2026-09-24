@@ -1,0 +1,17 @@
+{
+  "name": "Storage CLI Agent",
+  "description": "Native Rust CLI and agent tool for uploading files and folders to Azure Blob Storage with time-limited SAS URLs.",
+  "url": "https://spacecorps.github.io/Storage-Cli/",
+  "version": "1.0.0",
+  "capabilities": ["storage", "blob", "azure", "upload", "zip", "sas"],
+  "skills": [
+    {
+      "name": "storage-cli",
+      "url": "https://spacecorps.github.io/Storage-Cli/llms.txt"
+    }
+  ],
+  "contact": {
+    "email": "contact@spacecorps.dev",
+    "url": "https://spacecorps.github.io/Storage-Cli/contact.html"
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · Storage CLI</title>
+  <meta name="description" content="About Storage CLI: A native Rust command-line tool and agent interface for Azure Blob Storage with automated zip packaging and read-only SAS URLs.">
+  <link rel="canonical" href="https://spacecorps.github.io/Storage-Cli/about.html">
+  <meta property="og:title" content="About · Storage CLI">
+  <meta property="og:description" content="About Storage CLI: A native Rust command-line tool and agent interface for Azure Blob Storage.">
+  <meta property="og:url" content="https://spacecorps.github.io/Storage-Cli/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://spacecorps.github.io/Storage-Cli/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="is-agentic-site-type" content="content">
+  <style>
+    body { background: #090d16; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; padding: 40px 20px; }
+    .content-box { max-width: 800px; margin: 0 auto; background: rgba(22, 27, 46, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; }
+    h1 { font-size: 2.2rem; margin-bottom: 20px; color: #fff; }
+    h2 { font-size: 1.4rem; margin-top: 30px; margin-bottom: 12px; color: #38bdf8; }
+    p { margin-bottom: 16px; color: #94a3b8; }
+    a { color: #38bdf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { display: inline-block; margin-bottom: 24px; color: #6366f1; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="content-box">
+    <a href="./" class="back">&larr; Back to Storage CLI</a>
+    <h1>About Storage CLI</h1>
+    
+    <p>Storage CLI is a high-performance, native command-line tool and programmatic automation interface designed for uploading files and folders to Azure Blob Storage and generating time-limited, read-only Shared Access Signature (SAS) URLs. Maintained under the SpaceCorps open-source engineering collective, the project originated to provide developers and autonomous AI agents with a single, standalone binary capable of operating seamlessly across macOS, Linux, and Windows without runtime dependencies.</p>
+
+    <h2>Project Mission & Lineage</h2>
+    <p>The original prototype CLI was implemented as a .NET global tool (<code>Storage.Console</code>) by Niels Bosma. In 2026, SpaceCorps engineered a native Rust rewrite to achieve cold-start execution in 1 to 3 milliseconds, zero runtime installation prerequisites, and built-in integration with native operating system keychains.</p>
+
+    <h2>Architectural Principles</h2>
+    <p>Storage CLI adheres strictly to SpaceCorps tenets: safety, determinism, and performance. Credentials are held in native OS vaults (macOS Keychain, Linux Secret Service, Windows DPAPI), mutating operations enforce explicit account scoping, and directory uploads automatically package cleanly into zip archives without bundling temporary build directories or version control metadata.</p>
+  </div>
+</body>
+</html>

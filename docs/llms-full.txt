@@ -1,0 +1,52 @@
+# Storage CLI - Comprehensive Agent Reference Manual
+
+> An exhaustive technical manual for autonomous agents driving the Storage CLI (`storage`). Covers Azure Blob Storage BlockBlob uploads, directory zip compression, SAS token generation, and account profile management.
+
+## When To Use This Tool
+
+- Programmatic upload of deployment artifacts, build outputs, diagnostic logs, reports, and datasets to Azure Blob Storage.
+- Generating time-limited, read-only Shared Access Signature (SAS) URLs for secure temporary file sharing.
+- Packaging entire folders into clean zip bundles on the fly, skipping unwanted build artifacts.
+- Automation scripts and CI/CD pipelines requiring native execution speed (1–3 ms) and zero runtime dependencies.
+
+## Exit Codes and Error Envelopes
+
+Every error response on stderr conforms to the standard envelope structure:
+
+```json
+{
+  "code": "error_code_string",
+  "message": "Human readable summary",
+  "detail": "Extended debugging context",
+  "remediation": "Exact command or action needed to fix"
+}
+```
+
+Exit code numbers match the error code contract:
+- `0`: Success / OK
+- `1`: Unclassified runtime failure
+- `2`: Network / transport failure
+- `3`: `auth_required` - Credentials missing or Azure CLI session not found
+- `4`: `not_found` - Storage container or local file not found
+- `5`: `rate_limited` - Azure Storage rate limit reached
+- `6`: `invalid_input` - Bad command flags, missing arguments, or invalid date format
+- `7`: `no_account` - Storage profile not found; run `storage accounts list`
+
+## Safety Guardrails
+
+1. **Deterministic Multi-Profile Safety**:
+   Every upload requires an explicit profile name or `--account <name>` (`-a <name>`). No implicit default profile prevents uploading data to the wrong container or account.
+2. **OS Keystore Integration**:
+   Storage account keys and SAS tokens are held in native OS keystores (macOS Keychain, Linux Secret Service, Windows DPAPI) and never stored in plaintext config files unless explicitly requested.
+3. **Artifact Exclusions**:
+   Directory uploads automatically exclude `.git`, `bin`, `obj`, `node_modules`, `target`, and `.DS_Store` to prevent accidental leakage of sensitive VCS metadata or massive dependencies.
+4. **Time-Limited Links**:
+   Read-only SAS URLs expire automatically (defaulting to 30 days, or customized via `--expires YYYY-MM-DD` / `--expiry-hours N`).
+
+## Environment Variables
+
+- `STORAGE_CONFIG_DIR`: Override location of `config.yaml` and keystores.
+- `STORAGE_SECRET_STORE`: Force backend (`keychain`, `libsecret`, `dpapi`, `plaintext`).
+- `STORAGE_ALLOW_PLAINTEXT_STORE=1`: Allow unencrypted fallback file when no OS keystore is available.
+- `STORAGE_ENDPOINT`: Override Azure Blob Storage endpoint URL (for Azurite or mock servers).
+- `STORAGE_SAS_TOKEN`: Bypass `az` CLI execution by providing a pre-generated SAS token.

@@ -1,0 +1,43 @@
+# Storage CLI
+
+> A blazing fast native command-line tool and agent interface for Azure Blob Storage. Upload files and directories with automatic zip packaging and receive time-limited, read-only SAS URLs.
+
+## When to Use This CLI
+
+Use the `storage` CLI whenever you need to:
+- **Share files via temporary links:** Upload files or folders to Azure Blob Storage and generate time-limited read-only SAS URLs.
+- **Package and archive directories:** Upload full directories with automatic zip compression, safely omitting build and VCS artifacts (`.git`, `bin`, `obj`, `node_modules`).
+- **Control expiry times:** Set custom SAS URL expiry dates (`YYYY-MM-DD`) or duration in hours (`--expiry-hours N`).
+- **Autonomous workflows:** Drive uploads and profile configuration via `--json` output, structured error envelopes, and stable exit codes.
+
+Do NOT use this tool if:
+- You need complex multi-container sync or bucket synchronization (use AzCopy).
+- You are targeting Amazon S3 or Google Cloud Storage directly.
+
+## Core Agent Operating Principles
+
+1. **Explicit Profile or Account Selection:** Always specify the storage profile name as the first argument or pass `--account <name>` (short `-a <name>`).
+2. **Profile Discovery:** Run `storage accounts list` to inspect configured profiles before initiating uploads.
+3. **Machine-Readable Outputs:** Supply `--json` when parsing command results in scripts or LLM tool-calling loops.
+4. **Error Codes:** Non-zero exit codes carry structured error envelopes with stable codes (`no_account`, `auth_required`, `not_found`, `rate_limited`, `invalid_input`).
+
+## Key Command Patterns
+
+### Profile Management & Authentication
+- `storage accounts list --check`: List configured profiles and verify connectivity.
+- `storage accounts add <profile> --account-name <acc> --container <cont>`: Add a storage profile with account and container names.
+- `storage accounts test <profile>`: Verify credentials and SAS generation for a profile.
+- `storage login <profile>`: Interactively configure storage credentials.
+
+### Uploading Files & Folders
+- `storage upload <profile> <path>`: Upload a file or folder and output time-limited read-only SAS URL.
+- `storage upload <path> -a <profile>`: Upload with explicit `--account` flag.
+- `storage upload <profile> <path> --zipped`: Force zip compression on single files.
+- `storage upload <profile> <path> --expires 2026-12-31`: Upload with custom expiry date.
+- `storage upload <profile> <path> --expiry-hours 72`: Upload with custom expiry in hours.
+- `storage upload <profile> <path> --json`: Machine-readable JSON output.
+
+## Documentation & Discovery
+- Documentation: https://spacecorps.github.io/Storage-Cli/
+- Detailed Agent Manual: https://spacecorps.github.io/Storage-Cli/llms-full.txt
+- GitHub Repository: https://github.com/SpaceCorps/Storage-Cli

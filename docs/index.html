@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storage CLI | Fast Native Azure Blob Storage CLI in Rust</title>
+  <meta name="description" content="A blazing fast native command-line tool and agent interface for Azure Blob Storage, written in Rust. Upload files and directories with automated zip compression and get time-limited SAS URLs.">
+  <link rel="canonical" href="https://spacecorps.github.io/Storage-Cli/">
+  <meta name="is-agentic-site-type" content="content">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="keywords" content="Storage CLI, Azure Blob Storage, Rust, SAS URL, Azure CLI, cloud storage, file upload, directory zip, AI agents, DevOps">
+  <meta name="author" content="SpaceCorps">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spacecorps.github.io/Storage-Cli/">
+  <meta property="og:title" content="Storage CLI | Fast Native Azure Blob Storage CLI in Rust">
+  <meta property="og:description" content="A blazing fast native command-line tool and agent interface for Azure Blob Storage, written in Rust. Upload files & directories with time-limited SAS URLs.">
+  <meta property="og:image" content="https://spacecorps.github.io/Storage-Cli/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Storage CLI — Native Rust Command Line Tool for Azure Blob Storage">
+  <meta property="og:site_name" content="Storage CLI">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://spacecorps.github.io/Storage-Cli/">
+  <meta name="twitter:title" content="Storage CLI | Fast Native Azure Blob Storage CLI in Rust">
+  <meta name="twitter:description" content="A blazing fast native command-line tool and agent interface for Azure Blob Storage, written in Rust. Upload files & directories with time-limited SAS URLs.">
+  <meta name="twitter:image" content="https://spacecorps.github.io/Storage-Cli/og-image.png">
+
+  <!-- AI Agents & Discovery -->
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Storage-Cli/index.md" title="Markdown Homepage">
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Storage-Cli/llms.txt" title="LLMs.txt">
+  <link rel="sitemap" type="application/xml" href="https://spacecorps.github.io/Storage-Cli/sitemap.xml" title="Sitemap">
+  <script>
+    if (new URLSearchParams(window.location.search).get('mode') === 'agent') {
+      window.location.href = 'llms.txt';
+    }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Storage CLI",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "url": "https://spacecorps.github.io/Storage-Cli/",
+        "description": "A blazing fast native command-line tool and agent interface for Azure Blob Storage, written in Rust. Upload files and directories with automated zip compression and get time-limited SAS URLs.",
+        "softwareVersion": "1.0.0",
+        "downloadUrl": "https://github.com/SpaceCorps/Storage-Cli/releases/tag/v1.0.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "SpaceCorps",
+          "url": "https://github.com/SpaceCorps"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "SpaceCorps",
+        "url": "https://github.com/SpaceCorps",
+        "sameAs": [
+          "https://github.com/SpaceCorps/Storage-Cli",
+          "https://github.com/SpaceCorps"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "technical support",
+          "url": "https://github.com/SpaceCorps/Storage-Cli/issues"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "US"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(22, 27, 46, 0.7);
+      --bg-card-hover: rgba(30, 38, 66, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(99, 102, 241, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --accent: #38bdf8;
+      --code-bg: #0d1117;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      padding: 0 20px;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 60px 0 100px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid var(--border-accent);
+      color: var(--primary-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 40%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lead {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 30px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .terminal-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin: 40px 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .circle { width: 12px; height: 12px; border-radius: 50%; }
+    .circle-red { background: #ef4444; }
+    .circle-yellow { background: #eab308; }
+    .circle-green { background: #22c55e; }
+    .terminal-title { margin-left: 8px; color: #64748b; font-size: 0.85rem; font-family: monospace; }
+
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92rem;
+      color: #38bdf8;
+      display: block;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 50px 0;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 30px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: rgba(255,255,255,0.03);
+      padding: 14px 18px;
+      color: #fff;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 14px 18px;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    code {
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.88rem;
+      color: #38bdf8;
+    }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover { color: #fff; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="https://github.com/SpaceCorps/Storage-Cli" class="badge">
+        <span>⚡ Native Rust 2024</span>
+        <span>•</span>
+        <span>v1.0.0</span>
+      </a>
+      <h1>Fast Native Azure Blob Storage CLI</h1>
+      <p class="lead">
+        Upload files and folders to Azure Blob Storage with automated zip packaging and time-limited read-only SAS URLs. Built for developers and autonomous AI agents.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="#install" class="btn btn-primary">Install Storage CLI</a>
+        <a href="https://github.com/SpaceCorps/Storage-Cli" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        <a href="llms.txt" class="btn btn-secondary">Agent Manifest (llms.txt)</a>
+      </div>
+    </header>
+
+    <div class="terminal-box">
+      <div class="terminal-header">
+        <div class="circle circle-red"></div>
+        <div class="circle circle-yellow"></div>
+        <div class="circle circle-green"></div>
+        <div class="terminal-title">terminal — storage upload</div>
+      </div>
+      <pre><code># Upload a single file and generate a 30-day read-only SAS URL
+$ storage upload ivy-tendril ./report.pdf
+
+status: uploaded
+account: stivytelemetry
+container: ivy-tendril
+blob: report.pdf
+size_bytes: 124508
+content_type: application/pdf
+expires: 2026-10-24
+url: https://stivytelemetry.blob.core.windows.net/ivy-tendril/report.pdf?se=2026-10-24&amp;sp=r&amp;sig=...</code></pre>
+    </div>
+
+    <section id="features" style="margin-top: 60px;">
+      <h2 style="font-size: 1.8rem; margin-bottom: 24px;">Core Capabilities</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>⚡ 1–3 ms Cold-Start</h3>
+          <p>Static binary with zero runtime dependencies. Replaces managed runtime overhead with instantaneous native execution.</p>
+        </div>
+        <div class="card">
+          <h3>📦 Smart Directory Zipping</h3>
+          <p>Uploading a folder automatically bundles it into a zip archive while excluding <code>.git</code>, <code>bin</code>, <code>obj</code>, and <code>node_modules</code>.</p>
+        </div>
+        <div class="card">
+          <h3>⏱️ Time-Limited SAS URLs</h3>
+          <p>Generates read-only SAS tokens with customizable expiration dates (<code>--expires YYYY-MM-DD</code>) or durations in hours (<code>--expiry-hours N</code>).</p>
+        </div>
+        <div class="card">
+          <h3>🔐 Native OS Keystores</h3>
+          <p>Secrets never touch plaintext disk files. Storage keys are secured via macOS Keychain, Windows DPAPI, or Linux Secret Service.</p>
+        </div>
+        <div class="card">
+          <h3>🤖 AI Agent Protocol</h3>
+          <p>Supplying <code>--json</code> produces clean, structured JSON output for tool loops and <code>jq</code>, backed by standard numeric exit codes.</p>
+        </div>
+        <div class="card">
+          <h3>🛡️ Multi-Profile Safety</h3>
+          <p>Every operation explicitly resolves against a configured profile or <code>--account</code>, preventing accidental data writes to the wrong container.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" style="margin-top: 60px;">
+      <h2 style="font-size: 1.8rem; margin-bottom: 24px;">Installation</h2>
+      <div class="terminal-box">
+        <pre><code># Install from crates / git via Cargo
+cargo install --git https://github.com/SpaceCorps/Storage-Cli --locked
+
+# Or download precompiled binaries for macOS (ARM64 &amp; x86_64), Linux, or Windows
+# from GitHub Releases:
+https://github.com/SpaceCorps/Storage-Cli/releases/latest</code></pre>
+      </div>
+    </section>
+
+    <section id="commands" style="margin-top: 60px;">
+      <h2 style="font-size: 1.8rem; margin-bottom: 24px;">Command Reference</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>storage upload &lt;profile&gt; &lt;path&gt;</code></td>
+              <td>Upload a file or folder and output time-limited read-only SAS URL</td>
+              <td><code>--zipped</code>, <code>--expires</code>, <code>--expiry-hours</code>, <code>--container</code>, <code>--json</code></td>
+            </tr>
+            <tr>
+              <td><code>storage login [name]</code></td>
+              <td>Configure a storage profile and store credentials in the OS keystore</td>
+              <td><code>--account-name</code>, <code>--container</code>, <code>--key</code>, <code>--key-stdin</code></td>
+            </tr>
+            <tr>
+              <td><code>storage accounts add &lt;name&gt;</code></td>
+              <td>Register a storage profile and credentials</td>
+              <td><code>--account-name</code>, <code>--container</code>, <code>--endpoint</code>, <code>--force</code></td>
+            </tr>
+            <tr>
+              <td><code>storage accounts list</code></td>
+              <td>List all configured storage profiles</td>
+              <td><code>--check</code>, <code>--json</code></td>
+            </tr>
+            <tr>
+              <td><code>storage accounts test &lt;name&gt;</code></td>
+              <td>Verify profile configuration and SAS token generation</td>
+              <td><code>--json</code></td>
+            </tr>
+            <tr>
+              <td><code>storage accounts remove &lt;name&gt;</code></td>
+              <td>Delete a storage profile and purge credentials from vault</td>
+              <td><code>--yes</code></td>
+            </tr>
+            <tr>
+              <td><code>storage agent-readme</code></td>
+              <td>Self-documenting operating manual for autonomous agents</td>
+              <td><code>--json</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        &copy; 2026 SpaceCorps. Licensed under the MIT License. Ported from Niels Bosma's prototype.
+      </div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="auth.md">Authentication</a>
+        <a href="pricing.md">Pricing</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+        <a href="llms.txt">llms.txt</a>
+        <a href="llms-full.txt">Agent Reference</a>
+        <a href="https://github.com/SpaceCorps/Storage-Cli" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
